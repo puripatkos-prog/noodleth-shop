@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เส้นเด็ด | บะหมี่กึ่งสำเร็จรูปรสเด็ด ส่งตรงถึงบ้าน</title>
+<meta name="description" content="บะหมี่กึ่งสำเร็จรูปเส้นเหนียวนุ่ม ซุปเข้มข้น 3 รสชาติ สั่งออนไลน์ ส่งฟรีเมื่อซื้อครบ 399 บาท">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--red:#d62839;--red-d:#a91b2a;--cream:#fff7ec;--ink:#2b2118;--mute:#7a6a5a;--line:#efdfc9;--ok:#2f9e44}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:"Noto Sans Thai",system-ui,sans-serif;color:var(--ink);background:var(--cream);line-height:1.6}
+.wrap{max-width:1040px;margin:0 auto;padding:0 20px}
+header{position:sticky;top:0;z-index:20;background:rgba(255,247,236,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line)}
+header .wrap{display:flex;align-items:center;justify-content:space-between;height:60px}
+.logo{font-weight:800;font-size:22px;color:var(--red)}
+.btn{display:inline-block;border:0;border-radius:999px;background:var(--red);color:#fff;font:700 16px "Noto Sans Thai",sans-serif;padding:12px 26px;cursor:pointer;text-decoration:none}
+.btn:hover{background:var(--red-d)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn.ghost{background:transparent;color:var(--red);border:2px solid var(--red)}
+.hero{padding:56px 0 40px}
+.hero .wrap{display:grid;grid-template-columns:1.1fr .9fr;gap:32px;align-items:center}
+.hero h1{font-size:clamp(32px,5vw,52px);line-height:1.2;margin:0 0 14px;font-weight:800}
+.hero h1 span{color:var(--red)}
+.hero p{font-size:18px;color:var(--mute);margin:0 0 24px}
+.hero .imgs{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.hero .imgs img{width:100%;border-radius:24px;box-shadow:0 12px 30px rgba(120,60,0,.15)}
+.hero .imgs img:first-child{grid-column:1/3}
+.badges{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}
+.badge{background:#fff;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:14px}
+section{padding:44px 0}
+h2{font-size:30px;margin:0 0 6px;font-weight:800}
+.sub{color:var(--mute);margin:0 0 26px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:20px}
+.card{background:#fff;border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column}
+.card img{width:100%;aspect-ratio:1;object-fit:cover;background:#fff1e0}
+.card .b{padding:16px 18px 20px;display:flex;flex-direction:column;gap:6px;flex:1}
+.card h3{margin:0;font-size:18px}
+.card .d{color:var(--mute);font-size:14px;flex:1}
+.price{font-size:24px;font-weight:800;color:var(--red)}
+.price small{font-size:13px;font-weight:400;color:var(--mute)}
+.qty{display:flex;align-items:center;gap:10px;margin-top:6px}
+.qty button{width:38px;height:38px;border-radius:50%;border:2px solid var(--red);background:#fff;color:var(--red);font-size:20px;font-weight:700;cursor:pointer}
+.qty button:hover{background:var(--red);color:#fff}
+.qty output{min-width:28px;text-align:center;font-weight:700;font-size:18px}
+.low{color:#c2410c;font-size:13px}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+.feat{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px}
+.feat b{display:block;font-size:17px;margin-bottom:4px}
+.feat span{color:var(--mute);font-size:14px}
+.checkout{display:grid;grid-template-columns:1.2fr .8fr;gap:24px;align-items:start}
+.panel{background:#fff;border:1px solid var(--line);border-radius:22px;padding:22px}
+label{display:block;font-size:14px;font-weight:500;margin:12px 0 4px}
+input,select,textarea{width:100%;font:16px "Noto Sans Thai",sans-serif;padding:10px 12px;border:1px solid #dccbb2;border-radius:12px;background:#fffdf9}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--red);outline-offset:0}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.sum div{display:flex;justify-content:space-between;padding:6px 0}
+.sum .t{border-top:2px dashed var(--line);margin-top:6px;padding-top:12px;font-size:20px;font-weight:800;color:var(--red)}
+.sum .it{font-size:14px;color:var(--mute)}
+.msg{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:14px;display:none}
+.msg.err{display:block;background:#fde8ea;color:#8f1d28}
+.msg.ok{display:block;background:#e6f6ea;color:#1c6b2e}
+.hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+footer{padding:30px 0 50px;color:var(--mute);font-size:14px;text-align:center;border-top:1px solid var(--line)}
+@media(max-width:800px){.hero .wrap,.checkout{grid-template-columns:1fr}.row2{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><div class="wrap"><div class="logo" id="shopName">เส้นเด็ด</div><a class="btn" href="#order">สั่งซื้อเลย</a></div></header>
+
+<div class="hero"><div class="wrap">
+  <div>
+    <h1>เส้นเหนียวนุ่ม <span>ซุปเข้มข้น</span><br>อร่อยเต็มชาม ใน 3 นาที</h1>
+    <p>บะหมี่กึ่งสำเร็จรูป 3 รสชาติ ทำจากวัตถุดิบคัดสรร ไม่ต้องรอนาน ส่งตรงถึงบ้านคุณทั่วไทย</p>
+    <a class="btn" href="#products">ดูสินค้าทั้งหมด</a>
+    <div class="badges"><span class="badge">🚚 ส่งฟรีเมื่อครบ <b id="freeAt">399</b> บาท</span><span class="badge">📦 แพ็คเรียบร้อย ส่งไว</span><span class="badge">💳 โอน / เก็บเงินปลายทาง</span></div>
+  </div>
+  <div class="imgs">
+    <img src="images/products/tomyum.svg" alt="บะหมี่รสต้มยำกุ้ง">
+    <img src="images/products/moosub.svg" alt="บะหมี่รสหมูสับน้ำใส">
+    <img src="images/products/keemao.svg" alt="บะหมี่รสผัดขี้เมา">
+  </div>
+</div></div>
+
+<section id="products"><div class="wrap">
+  <h2>เลือกรสที่ใช่</h2>
+  <p class="sub">ราคาต่อแพ็ค (6 ซอง)</p>
+  <div class="grid" id="grid"><p>กำลังโหลดสินค้า…</p></div>
+</div></section>
+
+<section><div class="wrap">
+  <div class="features">
+    <div class="feat"><b>🍜 เส้นเหนียวนุ่ม</b><span>ไม่เละ ไม่แฉะ แม้แช่นาน</span></div>
+    <div class="feat"><b>🌶️ ซุปเข้มข้น</b><span>เครื่องเทศหอม รสชาติจัดเต็ม</span></div>
+    <div class="feat"><b>⏱️ พร้อมทานใน 3 นาที</b><span>ง่าย สะดวก ทานได้ทุกที่</span></div>
+    <div class="feat"><b>📮 ส่งทั่วประเทศ</b><span>แพ็คแน่นหนา พร้อมเลขพัสดุ</span></div>
+  </div>
+</div></section>
+
+<section id="order"><div class="wrap">
+  <h2>สั่งซื้อสินค้า</h2>
+  <p class="sub">กรอกที่อยู่จัดส่ง แล้วกดยืนยันคำสั่งซื้อ ทางร้านจะติดต่อกลับเพื่อยืนยัน</p>
+  <form id="form" class="checkout" novalidate>
+    <div class="panel">
+      <label for="name">ชื่อ-นามสกุล ผู้รับ *</label><input id="name" maxlength="80" autocomplete="name" required>
+      <label for="phone">เบอร์โทรศัพท์ *</label><input id="phone" inputmode="tel" maxlength="12" placeholder="0812345678" autocomplete="tel" required>
+      <label for="address">ที่อยู่ (บ้านเลขที่ ถนน หมู่บ้าน) *</label><textarea id="address" rows="2" maxlength="200" autocomplete="street-address" required></textarea>
+      <div class="row2">
+        <div><label for="subdistrict">แขวง/ตำบล *</label><input id="subdistrict" maxlength="60" required></div>
+        <div><label for="district">เขต/อำเภอ *</label><input id="district" maxlength="60" required></div>
+      </div>
+      <div class="row2">
+        <div><label for="province">จังหวัด *</label><input id="province" maxlength="60" autocomplete="address-level1" required></div>
+        <div><label for="zip">รหัสไปรษณีย์ *</label><input id="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" required></div>
+      </div>
+      <label for="pay">วิธีชำระเงิน</label>
+      <select id="pay"><option value="TRANSFER">โอนเงิน / พร้อมเพย์</option><option value="COD">เก็บเงินปลายทาง (COD)</option></select>
+      <label for="note">หมายเหตุ (ถ้ามี)</label><textarea id="note" rows="2" maxlength="200"></textarea>
+      <input class="hp" id="website" tabindex="-1" autocomplete="off" aria-hidden="true">
+    </div>
+    <div class="panel sum" style="position:sticky;top:76px">
+      <b style="font-size:18px">สรุปคำสั่งซื้อ</b>
+      <div id="lines" style="display:block;margin-top:8px"><span class="it">ยังไม่ได้เลือกสินค้า</span></div>
+      <div><span>ค่าสินค้า</span><span id="sub">฿0</span></div>
+      <div><span>ค่าจัดส่ง</span><span id="ship">฿0</span></div>
+      <div class="t"><span>รวมทั้งหมด</span><span id="total">฿0</span></div>
+      <button class="btn" id="submit" style="width:100%;margin-top:14px" disabled>ยืนยันคำสั่งซื้อ</button>
+      <div class="msg" id="msg" role="status"></div>
+    </div>
+  </form>
+</div></section>
+
+<footer><div class="wrap">© <span id="yr"></span> <span id="shopName2">เส้นเด็ด</span> · LINE <span id="line"></span> · โทร <span id="tel"></span></div></footer>
+
+<script src="config.js"></script>
+<script>
+(function(){
+  var C = window.CONFIG || {};
+  var fmt = function(n){ return "฿" + Number(n).toLocaleString("th-TH"); };
+  var $ = function(id){ return document.getElementById(id); };
+  var products = [], settings = {shipping_fee:40, free_shipping_over:399}, cart = {};
+  var demo = !C.API_URL;
+
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function imgSrc(f){ return "images/products/" + encodeURIComponent(String(f || "").replace(/[^\w.\-]/g,"")); }
+
+  $("shopName").textContent = C.SHOP_NAME || "เส้นเด็ด";
+  $("shopName2").textContent = C.SHOP_NAME || "เส้นเด็ด";
+  $("line").textContent = C.LINE_ID || "";
+  $("tel").textContent = C.CONTACT_PHONE || "";
+  $("yr").textContent = new Date().getFullYear();
+
+  function load(){
+    var url = demo ? "products.json" : C.API_URL + "?action=products";
+    return fetch(url).then(function(r){ return r.json(); }).catch(function(){ return fetch("products.json").then(function(r){ return r.json(); }); });
+  }
+
+  function render(){
+    var g = $("grid");
+    if(!products.length){ g.innerHTML = "<p>ขออภัย ยังไม่มีสินค้าให้สั่งซื้อในขณะนี้</p>"; return; }
+    g.innerHTML = products.map(function(p){
+      var out = p.stock <= 0;
+      return '<div class="card"><img src="'+imgSrc(p.image)+'" alt="'+esc(p.name)+'" loading="lazy"><div class="b">'
+        + '<h3>'+esc(p.name)+'</h3><div class="d">'+esc(p.description)+'</div>'
+        + '<div class="price">'+fmt(p.price)+' <small>/ '+esc(p.unit || "แพ็ค")+'</small></div>'
+        + (out ? '<div class="low">สินค้าหมดชั่วคราว</div>' : (p.stock <= 10 ? '<div class="low">เหลือเพียง '+p.stock+' แพ็ค</div>' : ''))
+        + '<div class="qty"><button type="button" data-sku="'+esc(p.sku)+'" data-d="-1" aria-label="ลด">−</button><output id="q-'+esc(p.sku)+'">0</output><button type="button" data-sku="'+esc(p.sku)+'" data-d="1" aria-label="เพิ่ม"'+(out?' disabled':'')+'>+</button></div>'
+        + '</div></div>';
+    }).join("");
+  }
+
+  function totals(){
+    var sub = 0, lines = [];
+    products.forEach(function(p){ var q = cart[p.sku] || 0; if(q){ sub += q * p.price; lines.push([p, q]); } });
+    var ship = sub === 0 ? 0 : (sub >= settings.free_shipping_over ? 0 : settings.shipping_fee);
+    return {sub:sub, ship:ship, total:sub+ship, lines:lines};
+  }
+
+  function update(){
+    var t = totals();
+    $("lines").innerHTML = t.lines.length ? t.lines.map(function(x){ return '<div class="it"><span>'+esc(x[0].name.replace("บะหมี่กึ่งสำเร็จรูป ",""))+' × '+x[1]+'</span><span>'+fmt(x[0].price*x[1])+'</span></div>'; }).join("") : '<span class="it">ยังไม่ได้เลือกสินค้า</span>';
+    $("sub").textContent = fmt(t.sub);
+    $("ship").textContent = t.ship ? fmt(t.ship) : (t.sub ? "ส่งฟรี" : fmt(0));
+    $("total").textContent = fmt(t.total);
+    $("submit").disabled = t.sub === 0;
+  }
+
+  $("grid").addEventListener("click", function(e){
+    var b = e.target.closest("button[data-sku]"); if(!b) return;
+    var sku = b.dataset.sku, d = +b.dataset.d;
+    var p = products.filter(function(x){ return x.sku === sku; })[0]; if(!p) return;
+    var q = Math.max(0, Math.min(p.stock, 99, (cart[sku] || 0) + d));
+    cart[sku] = q; $("q-" + sku).textContent = q; update();
+  });
+
+  function show(cls, text){ var m = $("msg"); m.className = "msg " + cls; m.textContent = text; }
+
+  $("form").addEventListener("submit", function(e){
+    e.preventDefault();
+    if($("website").value) return; // honeypot
+    var t = totals();
+    var v = {};
+    ["name","phone","address","subdistrict","district","province","zip","note","pay"].forEach(function(k){ v[k] = $(k).value.trim(); });
+    if(!t.lines.length) return show("err","กรุณาเลือกสินค้าอย่างน้อย 1 รายการ");
+    if(!v.name || !v.address || !v.subdistrict || !v.district || !v.province) return show("err","กรุณากรอกข้อมูลผู้รับให้ครบถ้วน");
+    if(!/^0\d{8,9}$/.test(v.phone.replace(/[-\s]/g,""))) return show("err","เบอร์โทรศัพท์ไม่ถูกต้อง (เช่น 0812345678)");
+    if(!/^\d{5}$/.test(v.zip)) return show("err","รหัสไปรษณีย์ต้องมี 5 หลัก");
+    v.phone = v.phone.replace(/[-\s]/g,"");
+    var payload = {action:"createOrder", customer:v, items:t.lines.map(function(x){ return {sku:x[0].sku, qty:x[1]}; })};
+    if(demo){ return show("ok","โหมดทดลอง: ยังไม่ได้ตั้งค่า API_URL ใน config.js จึงยังไม่บันทึกคำสั่งซื้อลง Google Sheet"); }
+    var btn = $("submit"); btn.disabled = true; btn.textContent = "กำลังส่งคำสั่งซื้อ…";
+    fetch(C.API_URL, {method:"POST", body:JSON.stringify(payload)})
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if(!res.ok) throw new Error(res.error || "สั่งซื้อไม่สำเร็จ");
+        show("ok","สั่งซื้อสำเร็จ! เลขที่คำสั่งซื้อ " + res.order_id + " ยอดรวม " + fmt(res.total) + (v.pay === "TRANSFER" ? " — ทางร้านจะส่งข้อมูลการโอนให้ทาง LINE/โทร" : " — ชำระเงินปลายทาง"));
+        cart = {}; render(); update(); $("form").reset();
+        load().then(function(d){ products = (d.products||[]).filter(function(p){ return p.active !== false; }); render(); update(); });
+      })
+      .catch(function(err){ show("err", err.message || "เกิดข้อผิดพลาด กรุณาลองใหม่"); })
+      .then(function(){ btn.textContent = "ยืนยันคำสั่งซื้อ"; update(); });
+  });
+
+  load().then(function(d){
+    products = (d.products || []).filter(function(p){ return p.active !== false && p.active !== "FALSE"; });
+    if(d.settings){ settings.shipping_fee = +d.settings.shipping_fee; settings.free_shipping_over = +d.settings.free_shipping_over; }
+    $("freeAt").textContent = settings.free_shipping_over;
+    render(); update();
+  }).catch(function(){ $("grid").innerHTML = "<p>โหลดสินค้าไม่สำเร็จ กรุณารีเฟรชหน้า</p>"; });
+})();
+</script>
+</body>
+</html>

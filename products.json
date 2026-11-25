@@ -1,0 +1,41 @@
+{
+  "settings": { "shipping_fee": 40, "free_shipping_over": 399 },
+  "products": [
+    {
+      "sku": "NDL-TY-001",
+      "name": "บะหมี่กึ่งสำเร็จรูป รสต้มยำกุ้ง",
+      "description": "ซุปต้มยำเข้มข้น หอมตะไคร้ ใบมะกรูด เส้นเหนียวนุ่ม",
+      "price": 89,
+      "weight_g": 360,
+      "stock": 200,
+      "image": "tomyum.svg",
+      "bin_location": "A-01",
+      "active": true,
+      "unit": "แพ็ค 6 ซอง"
+    },
+    {
+      "sku": "NDL-MS-002",
+      "name": "บะหมี่กึ่งสำเร็จรูป รสหมูสับน้ำใส",
+      "description": "ซุปใสหวานหอมกระดูกหมู กินง่าย ถูกปากทุกวัย",
+      "price": 79,
+      "weight_g": 330,
+      "stock": 200,
+      "image": "moosub.svg",
+      "bin_location": "A-02",
+      "active": true,
+      "unit": "แพ็ค 6 ซอง"
+    },
+    {
+      "sku": "NDL-KM-003",
+      "name": "บะหมี่กึ่งสำเร็จรูป รสผัดขี้เมา (แบบแห้ง)",
+      "description": "เส้นผัดแห้งเผ็ดจัดจ้าน หอมใบโหระพา พริกสด",
+      "price": 99,
+      "weight_g": 420,
+      "stock": 150,
+      "image": "keemao.svg",
+      "bin_location": "B-01",
+      "active": true,
+      "unit": "แพ็ค 6 ซอง"
+    }
+  ]
+}

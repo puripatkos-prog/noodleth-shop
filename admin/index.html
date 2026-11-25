@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>หลังบ้าน | หยิบ-แพ็ค-ส่ง</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--red:#d62839;--ink:#2b2118;--mute:#7a6a5a;--line:#e6d8c3;--bg:#f7f2ea}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans Thai",system-ui,sans-serif;background:var(--bg);color:var(--ink)}
+.wrap{max-width:1100px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0}
+.top{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin-bottom:12px}
+.btn{border:0;border-radius:10px;background:var(--red);color:#fff;font:600 15px "Noto Sans Thai",sans-serif;padding:9px 16px;cursor:pointer}
+.btn.sec{background:#fff;color:var(--ink);border:1px solid var(--line)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+input[type=password],input[type=text]{font:15px "Noto Sans Thai",sans-serif;padding:8px 10px;border:1px solid var(--line);border-radius:10px}
+.tabs{display:flex;gap:6px;margin:12px 0;flex-wrap:wrap}
+.tab{padding:9px 16px;border-radius:999px;border:1px solid var(--line);background:#fff;cursor:pointer;font:600 14px "Noto Sans Thai",sans-serif}
+.tab.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.box{background:#fff;border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:12px}
+table{width:100%;border-collapse:collapse;font-size:15px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top}
+th{font-size:13px;color:var(--mute)}
+td.n,th.n{text-align:right}
+.bin{font-weight:700;background:#fff3cd;border-radius:6px;padding:2px 8px;white-space:nowrap}
+.mute{color:var(--mute);font-size:13px}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:12px;font-weight:700}
+.NEW{background:#fff3cd}.PACKED{background:#d0ebff}.SHIPPED{background:#d3f9d8}.CANCELLED{background:#eee}
+.chk{display:flex;gap:8px;align-items:center;padding:4px 0;font-size:16px}
+.chk input{width:20px;height:20px}
+.hdr{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center}
+.err{color:#b00020;font-weight:600}
+/* ===== ใบจ่าหน้า ===== */
+.labels{display:flex;flex-wrap:wrap;gap:12px}
+.label{width:100mm;height:150mm;background:#fff;border:2px solid #000;padding:5mm;display:flex;flex-direction:column;font-size:12pt;color:#000;page-break-after:always;break-after:page;overflow:hidden}
+.label .from{font-size:9.5pt;border-bottom:1px dashed #000;padding-bottom:3mm}
+.label .to{flex:1;padding-top:3mm}
+.label .to .lbl{font-size:10pt;font-weight:700}
+.label .to .nm{font-size:20pt;font-weight:700;line-height:1.2}
+.label .to .ph{font-size:16pt;font-weight:700;margin:1mm 0}
+.label .to .ad{font-size:14pt;line-height:1.35}
+.label .zip{font-size:26pt;font-weight:700;letter-spacing:3px;margin-top:2mm}
+.label .cod{border:3px solid #000;text-align:center;padding:2mm;margin:2mm 0;font-weight:700;font-size:18pt}
+.label .foot{border-top:1px dashed #000;padding-top:2mm;font-size:9.5pt}
+.label .oid{font-family:monospace;font-size:13pt;font-weight:700}
+.hide{display:none!important}
+@media print{
+  @page{size:100mm 150mm;margin:0}
+  body{background:#fff}
+  .wrap>*:not(#printArea){display:none!important}
+  .wrap{padding:0;max-width:none}
+  .labels{display:block}
+  .label{border:0;margin:0;width:100mm;height:150mm}
+  #printArea.slips .slip{page-break-after:always;break-after:page}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <h1>📦 หลังบ้าน: หยิบ · แพ็ค · ส่ง</h1>
+    <div id="auth">
+      <input type="password" id="key" placeholder="ADMIN_KEY" autocomplete="current-password">
+      <button class="btn" id="login">เข้าสู่ระบบ</button>
+    </div>
+  </div>
+  <div id="status" class="mute"></div>
+
+  <div id="app" class="hide">
+    <div class="top">
+      <div class="tabs" id="tabs">
+        <button class="tab on" data-t="pick">1) รายการหยิบสินค้า</button>
+        <button class="tab" data-t="pack">2) ตรวจ-แพ็ค</button>
+        <button class="tab" data-t="label">3) พิมพ์ใบจ่าหน้า</button>
+        <button class="tab" data-t="all">ออเดอร์ทั้งหมด</button>
+      </div>
+      <button class="btn sec" id="reload">↻ โหลดใหม่</button>
+    </div>
+    <div id="view"></div>
+  </div>
+
+  <div id="printArea"></div>
+</div>
+
+<script src="../config.js"></script>
+<script>
+(function(){
+  var API = (window.CONFIG || {}).API_URL;
+  var KEY = "", DATA = {orders:[], settings:{}}, TAB = "pick", packed = {}; // packed[order_id] = {sku:true}
+  var $ = function(id){ return document.getElementById(id); };
+  function esc(s){ return String(s == null ? "" : s).replace(/[&<>"']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]; }); }
+  function baht(n){ return Number(n).toLocaleString("th-TH"); }
+  function setStatus(t, err){ var s = $("status"); s.textContent = t || ""; s.className = err ? "err" : "mute"; }
+
+  if(!API){ setStatus("ยังไม่ได้ตั้งค่า API_URL ใน config.js", true); $("login").disabled = true; }
+  try{ KEY = sessionStorage.getItem("adminKey") || ""; if(KEY){ $("key").value = KEY; } }catch(e){}
+
+  function load(){
+    setStatus("กำลังโหลดออเดอร์…");
+    return fetch(API + "?action=orders&key=" + encodeURIComponent(KEY)).then(function(r){ return r.json(); }).then(function(d){
+      if(!d.ok) throw new Error(d.error === "unauthorized" ? "ADMIN_KEY ไม่ถูกต้อง" : d.error);
+      DATA = d; setStatus("โหลดแล้ว " + d.orders.length + " ออเดอร์ · " + new Date().toLocaleTimeString("th-TH"));
+      $("app").classList.remove("hide"); render();
+    }).catch(function(e){ setStatus(e.message || "โหลดไม่สำเร็จ", true); $("app").classList.add("hide"); });
+  }
+  function post(body){
+    body.key = KEY;
+    return fetch(API, {method:"POST", body:JSON.stringify(body)}).then(function(r){ return r.json(); }).then(function(d){ if(!d.ok) throw new Error(d.error); return d; });
+  }
+
+  $("login").onclick = function(){ KEY = $("key").value.trim(); try{ sessionStorage.setItem("adminKey", KEY); }catch(e){} load(); };
+  $("key").addEventListener("keydown", function(e){ if(e.key === "Enter") $("login").click(); });
+  $("reload").onclick = load;
+  $("tabs").onclick = function(e){ var b = e.target.closest(".tab"); if(!b) return; TAB = b.dataset.t; [].forEach.call(document.querySelectorAll(".tab"), function(x){ x.classList.toggle("on", x === b); }); render(); };
+
+  function byStatus(s){ return DATA.orders.filter(function(o){ return o.status === s; }); }
+  function itemsText(o){ return o.items.map(function(i){ return esc(i.name.replace("บะหมี่กึ่งสำเร็จรูป ","")) + " ×" + i.qty; }).join(", "); }
+  function addrText(o){ return o.address + " " + o.subdistrict + " " + o.district + " " + o.province + " " + o.zip; }
+
+  /* ---------- 1) รายการหยิบ (รวมตาม SKU เรียงตามตำแหน่งชั้นวาง) ---------- */
+  function viewPick(){
+    var news = byStatus("NEW"), agg = {};
+    news.forEach(function(o){ o.items.forEach(function(i){
+      var a = agg[i.sku] = agg[i.sku] || {sku:i.sku, name:i.name, bin:i.bin_location, qty:0, orders:0};
+      a.qty += Number(i.qty); a.orders++;
+    }); });
+    var list = Object.keys(agg).map(function(k){ return agg[k]; }).sort(function(a,b){ return String(a.bin).localeCompare(String(b.bin)); });
+    var total = list.reduce(function(s,a){ return s + a.qty; }, 0);
+    var h = '<div class="box"><div class="hdr"><b>รายการหยิบรวม — ออเดอร์ใหม่ ' + news.length + ' ออเดอร์</b><button class="btn sec" id="printPick">🖨 พิมพ์รายการหยิบ</button></div>';
+    if(!list.length) return h + '<p class="mute">ไม่มีออเดอร์ที่ต้องหยิบ 🎉</p></div>';
+    h += '<table><tr><th>ชั้นวาง</th><th>SKU</th><th>สินค้า</th><th class="n">จำนวน (แพ็ค)</th><th class="n">ในกี่ออเดอร์</th></tr>';
+    list.forEach(function(a){ h += '<tr><td><span class="bin">' + esc(a.bin) + '</span></td><td>' + esc(a.sku) + '</td><td>' + esc(a.name) + '</td><td class="n"><b>' + a.qty + '</b></td><td class="n">' + a.orders + '</td></tr>'; });
+    h += '<tr><td colspan="3"><b>รวม</b></td><td class="n"><b>' + total + '</b></td><td></td></tr></table></div>';
+    return h;
+  }
+
+  /* ---------- 2) ตรวจ-แพ็ค (ติ๊กรายการให้ครบก่อนกดแพ็ค) ---------- */
+  function viewPack(){
+    var news = byStatus("NEW");
+    if(!news.length) return '<div class="box"><p class="mute">ไม่มีออเดอร์รอแพ็ค</p></div>';
+    return news.map(function(o){
+      var p = packed[o.order_id] || {};
+      var all = o.items.every(function(i){ return p[i.sku]; });
+      return '<div class="box"><div class="hdr"><div><b class="oid">' + esc(o.order_id) + '</b> <span class="mute">' + esc(o.created_at) + '</span></div>'
+        + '<span class="pill ' + o.status + '">' + (o.payment === "COD" ? "COD ฿" + baht(o.total) : "โอนแล้ว/รอโอน") + '</span></div>'
+        + '<div class="mute" style="margin:4px 0 8px">ส่งถึง: ' + esc(o.name) + ' · ' + esc(o.phone) + '<br>' + esc(addrText(o)) + (o.note ? '<br>หมายเหตุ: ' + esc(o.note) : '') + '</div>'
+        + o.items.map(function(i){
+            return '<label class="chk"><input type="checkbox" data-o="' + esc(o.order_id) + '" data-s="' + esc(i.sku) + '"' + (p[i.sku] ? ' checked' : '') + '> '
+              + '<span class="bin">' + esc(i.bin_location) + '</span> ' + esc(i.name) + ' <b>× ' + i.qty + '</b></label>';
+          }).join("")
+        + '<div style="margin-top:10px"><button class="btn" data-pack="' + esc(o.order_id) + '"' + (all ? '' : ' disabled') + '>✅ แพ็คเสร็จแล้ว</button> '
+        + '<button class="btn sec" data-cancel="' + esc(o.order_id) + '">ยกเลิกออเดอร์</button></div></div>';
+    }).join("");
+  }
+
+  /* ---------- 3) ใบจ่าหน้า (A6 100x150mm) ---------- */
+  function labelHTML(o){
+    var s = DATA.settings || {};
+    var cod = o.payment === "COD" ? '<div class="cod">เก็บเงินปลายทาง ฿' + baht(o.total) + '</div>' : '';
+    return '<div class="label"><div class="from"><b>ผู้ส่ง:</b> ' + esc(s.sender_name) + ' โทร ' + esc(s.sender_phone) + '<br>' + esc(s.sender_address) + '</div>'
+      + '<div class="to"><div class="lbl">ผู้รับ</div><div class="nm">' + esc(o.name) + '</div><div class="ph">โทร ' + esc(o.phone) + '</div>'
+      + '<div class="ad">' + esc(o.address) + '<br>แขวง/ตำบล' + esc(o.subdistrict.replace(/^(แขวง|ตำบล)/,"")) + ' เขต/อำเภอ' + esc(o.district.replace(/^(เขต|อำเภอ)/,"")) + '<br>จ.' + esc(o.province.replace(/^(จ\.|จังหวัด)/,"")) + '</div>'
+      + '<div class="zip">' + esc(o.zip) + '</div></div>' + cod
+      + '<div class="foot"><div class="oid">' + esc(o.order_id) + '</div>' + itemsText(o) + (o.note ? '<br>หมายเหตุ: ' + esc(o.note) : '') + '</div></div>';
+  }
+  function viewLabel(){
+    var list = byStatus("PACKED");
+    if(!list.length) return '<div class="box"><p class="mute">ยังไม่มีออเดอร์ที่แพ็คแล้ว (ไปแท็บ “ตรวจ-แพ็ค” ก่อน)</p></div>';
+    var h = '<div class="box"><div class="hdr"><b>ออเดอร์ที่แพ็คแล้ว ' + list.length + ' รายการ</b><div>'
+      + '<button class="btn sec" id="selAll">เลือกทั้งหมด</button> <button class="btn" id="printLabels">🖨 พิมพ์ใบจ่าหน้าที่เลือก</button></div></div>'
+      + '<div class="mute" style="margin:6px 0">กระดาษ 100×150 มม. (A6 / สติ๊กเกอร์ความร้อน) · ตอนพิมพ์ตั้งค่า Margins = None</div><table>'
+      + '<tr><th></th><th>ออเดอร์</th><th>ผู้รับ</th><th>สินค้า</th><th>เลขพัสดุ</th><th></th></tr>';
+    list.forEach(function(o){
+      h += '<tr><td><input type="checkbox" class="sel" value="' + esc(o.order_id) + '" checked></td><td>' + esc(o.order_id) + '</td><td>' + esc(o.name) + '<div class="mute">' + esc(o.province) + ' ' + esc(o.zip) + '</div></td><td>' + itemsText(o) + '</td>'
+        + '<td><input type="text" size="14" id="trk-' + esc(o.order_id) + '" placeholder="เลขพัสดุ"></td>'
+        + '<td><button class="btn sec" data-ship="' + esc(o.order_id) + '">ส่งแล้ว</button></td></tr>';
+    });
+    return h + '</table></div>';
+  }
+
+  function viewAll(){
+    var h = '<div class="box"><table><tr><th>ออเดอร์</th><th>วันที่</th><th>ผู้รับ</th><th>สินค้า</th><th class="n">ยอด</th><th>สถานะ</th><th>พัสดุ</th></tr>';
+    DATA.orders.slice().reverse().forEach(function(o){
+      h += '<tr><td>' + esc(o.order_id) + '</td><td>' + esc(o.created_at) + '</td><td>' + esc(o.name) + '</td><td>' + itemsText(o) + '</td><td class="n">' + baht(o.total) + '</td><td><span class="pill ' + esc(o.status) + '">' + esc(o.status) + '</span></td><td>' + esc(o.tracking) + '</td></tr>';
+    });
+    return h + '</table></div>';
+  }
+
+  function render(){
+    $("printArea").innerHTML = ""; $("printArea").className = "";
+    $("view").innerHTML = ({pick:viewPick, pack:viewPack, label:viewLabel, all:viewAll})[TAB]();
+    if(TAB === "pick"){
+      var pp = $("printPick"); if(pp) pp.onclick = function(){
+        var pa = $("printArea"); pa.innerHTML = '<div style="padding:6mm;font-size:11pt">' + $("view").innerHTML.replace(/<button[\s\S]*?<\/button>/g,"") + '</div>';
+        setTimeout(function(){ window.print(); }, 150);
+      };
+    }
+    if(TAB === "label"){
+      var pa = $("printLabels"); if(pa) pa.onclick = printLabels;
+      var sa = $("selAll"); if(sa) sa.onclick = function(){ [].forEach.call(document.querySelectorAll(".sel"), function(c){ c.checked = true; }); };
+    }
+  }
+
+  function printLabels(){
+    var ids = [].map.call(document.querySelectorAll(".sel:checked"), function(c){ return c.value; });
+    if(!ids.length) return alert("กรุณาเลือกออเดอร์");
+    var os = DATA.orders.filter(function(o){ return ids.indexOf(o.order_id) >= 0; });
+    var pa = $("printArea"); pa.innerHTML = '<div class="labels">' + os.map(labelHTML).join("") + '</div>';
+    setTimeout(function(){ window.print(); }, 150);
+  }
+
+  document.addEventListener("change", function(e){
+    var c = e.target; if(!c.dataset || !c.dataset.o) return;
+    (packed[c.dataset.o] = packed[c.dataset.o] || {})[c.dataset.s] = c.checked;
+    render();
+  });
+
+  document.addEventListener("click", function(e){
+    var t = e.target.closest("button"); if(!t) return;
+    var id, st, trk;
+    if(t.dataset.pack){ id = t.dataset.pack; st = "PACKED"; }
+    else if(t.dataset.ship){ id = t.dataset.ship; st = "SHIPPED"; var i = $("trk-" + id); trk = i ? i.value.trim() : ""; }
+    else if(t.dataset.cancel){ id = t.dataset.cancel; st = "CANCELLED"; if(!confirm("ยืนยันยกเลิก " + id + " ? (สต็อกจะถูกคืน)")) return; }
+    else return;
+    t.disabled = true;
+    var body = {action:"updateStatus", order_id:id, status:st}; if(trk !== undefined) body.tracking = trk;
+    post(body).then(load).catch(function(err){ setStatus(err.message, true); t.disabled = false; });
+  });
+
+  if(API && KEY) load();
+})();
+</script>
+</body>
+</html>
